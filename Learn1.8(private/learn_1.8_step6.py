@@ -15,32 +15,38 @@ book = Book(автор, название, цена)
 
 class Book:
     def __init__(self, author, title, price):
-        self.__author = author
-        self.__title = title
-        self.__price = price
+        self.author = author
+        self.title = title
+        self.price = price
 
-    def set_title(self, title):
-        self.__title = title
-
-    def set_author(self, author):
-        self.__author = author
-
-    def set_price(self, price):
-        self.__price = price
-
-    def get_title(self):
-        return self.__title
-
-    def get_author(self):
+    @property
+    def author(self):
         return self.__author
 
-    def get_price(self):
+    @author.setter
+    def author(self, author):
+        self.__author = author
+
+    @property
+    def title(self):
+        return self.__title
+
+    @title.setter
+    def title(self, title):
+        self.__title = title
+
+    @property
+    def price(self):
         return self.__price
+
+    @price.setter
+    def price(self, price):
+        self.__price = price
 
 
 bk1 = Book('Л.Н. Толстой', 'Война и мир: том первый', 400)
-print(bk1.get_title(), bk1.get_author(), bk1.get_price())  # Война и мир: том первый Л.Н. Толстой 400
-bk1.set_title('Война и мир: том второй')
-bk1.set_author('Л.Н. Толстой, С.А. Толстая')
-bk1.set_price(550)
-print(bk1.get_title(), bk1.get_author(), bk1.get_price())  # Война и мир: том второй Л.Н. Толстой, С.А. Толстая 550
+print(bk1.title, bk1.author, bk1.price)  # Война и мир: том первый Л.Н. Толстой 400
+bk1.title = ('Война и мир: том второй')
+bk1.author = ('Л.Н. Толстой, С.А. Толстая')
+bk1.price = (550)
+print(bk1.title, bk1.author, bk1.price)  # Война и мир: том второй Л.Н. Толстой, С.А. Толстая 550

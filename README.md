@@ -1,10 +1,12 @@
 # LearnPythonOOP
 Solving OOP Problems Python
 
-There will be various tasks from the Python OOP topic. 
-I place them in separate folders with numbering for convenience. 
-Where the complexity of the tasks increases with each number.
+This repository is made for a friend of mine who is taking a Python OOP course. 
+So he can look at my decisions and compare them with his own.
+Therefore, the folders have the names of a specific lesson, 
+and the files have the number of the task (step)
 
-Здесь будут различные задачи из темы ООП Python. 
-Я размещаю их в отдельные папки с нумерацией для удобства. 
-Где с каждым числом возрастает сложность задач.
+Этот репозиторий создан для моего друга, который проходит курс Python OOП.
+Чтобы он мог смотреть на мои решения и сравнивать их со своими.
+Поэтому папки имеют названия конкретного урока,
+а в файлах есть номер задачи (шага)

@@ -58,4 +58,3 @@ class StringText:
 lst_text = [StringText(lst) for lst in res_lst]
 lst_text_sorted = sorted(lst_text, key=lambda x: len(x), reverse=True)
 lst_text_sorted = [' '.join(x.lst_words) for x in lst_text_sorted]
-

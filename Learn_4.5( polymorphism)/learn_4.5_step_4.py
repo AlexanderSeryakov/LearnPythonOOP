@@ -34,8 +34,3 @@ class ShopItem(ShopInterface):
 
     def get_id(self):
         return getattr(self, '_id')
-
-it1 = ShopItem('Cock', 150, 200)
-it2 = ShopItem('Cock2', 150213, 22200)
-print(it1.get_id(), it2.get_id())
-

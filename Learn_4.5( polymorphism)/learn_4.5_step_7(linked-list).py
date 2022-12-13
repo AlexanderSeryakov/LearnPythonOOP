@@ -49,39 +49,45 @@ class StackInterface(ABC):
 
 class Stack(StackInterface):
     def __init__(self):
-        self._top = self._end = None
+        self._top = None
+
+    def __iter__(self):
+        h = self._top
+        while h:
+            yield h
+            h = h.next
 
     def push_back(self, obj):
         if not self._top:
-            self._top = self._end = obj
-        else:
-            self._end._next = obj
-            self._end = obj
+            self._top = obj
+            return
+        *_, last = self
+        last.next = obj
 
     def pop_back(self):
-        if not self._end:
-            return
-        if self._top == self._end:
-            del_obj = self._end
-            self._top = self._end = None
-            return del_obj
-        pointer = self._top
-        prev_end = None
-        del_obj = self._end
-        while pointer:
-            if pointer._next == self._end:
-                prev_end = pointer
-                break
-            pointer = pointer._next
-        prev_end._next = None
-        self._end = prev_end
-        return del_obj
+        if not self._top:
+            return None
+        if not self._top.next:
+            obj = self._top
+            self._top = None
+            return obj
+        *_, p_last, last = self
+        p_last.next = None
+        return last
 
 
 class StackObj:
     def __init__(self, data):
         self._data = data
         self._next = None
+
+    @property
+    def next(self):
+        return self._next
+
+    @next.setter
+    def next(self, value):
+        self._next = value
 
 assert issubclass(Stack, StackInterface), "класс Stack должен наследоваться от класса StackInterface"
 

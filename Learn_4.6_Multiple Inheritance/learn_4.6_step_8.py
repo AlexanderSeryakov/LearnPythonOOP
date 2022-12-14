@@ -109,6 +109,7 @@ class GeneralView:
 class DetailView(RetriveMixin, UpdateMixin, GeneralView):
     allowed_methods = ('GET', 'POST', )
 
+# Tests
 
 assert issubclass(DetailView, GeneralView), "класс DetailView должен наследоваться от класса GeneralView"
 

@@ -48,4 +48,3 @@ fl2 = FileAcceptor('png', 'txt')
 fl12 = fl1 + fl2
 
 result = list(filter(fl12, filenames))
-print(result)

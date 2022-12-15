@@ -26,10 +26,21 @@ class Person:
         self._old = old
         self._job = job
 
-persons = [Person('Суворов', 52, 'полководец'),
-           Person('Рахманинов', 50, 'пианист, композитор'),
-           Person('Балакирев', 34, 'программист и преподаватель'),
-           Person('Пушкин', 32, 'поэт и писатель')
-           ]
+humans = """Суворов, 52, полководец
+Рахманинов, 50, пианист, композитор
+Балакирев, 34, программист и преподаватель
+Пушкин, 32, поэт и писатель"""
 
+persons = [Person(*x.split(', ', maxsplit=2)) for x in humans.splitlines()]
 
+# Tests
+
+assert len(persons) == 4, 'Неправильно сформирован список persons'
+assert all(map(lambda obj: isinstance(obj, Person), persons)), 'Элементы списка persons должны быть объектами класса Person'
+
+human_1 = Person('Name', 22, 'Developer')
+try:
+    human_1.mood = 'fine'
+    assert False, 'Неверно объявлена коллекция __slots__'
+except AttributeError:
+    assert True

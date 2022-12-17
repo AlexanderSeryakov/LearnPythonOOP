@@ -1,0 +1,3 @@
+This is new txt file created with vim
+And i just testing my vim-edit skills.
+Okey, save it.

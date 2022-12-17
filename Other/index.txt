@@ -3,5 +3,5 @@ And i just testing my vim-edit skills.
 Okey, save it.
 __________________
 Commit from gitbush successful.
-I`m opened this file and writed some text (<--this text:)
+I`m opened this file and wrote some text (<--this text:)
 Yeah, vim is really cool.

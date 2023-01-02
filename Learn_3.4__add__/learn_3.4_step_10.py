@@ -74,7 +74,7 @@ class MaxPooling:
 mp = MaxPooling(step=(2, 2), size=(2,2))
 res = mp([[1, 2, 3, 4], [5, 6, 7, 8], [9, 8, 7, 6], [5, 4, 3, 2]])    # [[6, 8], [9, 7]]
 
-# Test
+# Tests
 
 mp = MaxPooling(step=(2, 2), size=(2,2))
 m1 = [[1, 10, 10], [5, 10, 0], [0, 1, 2]]

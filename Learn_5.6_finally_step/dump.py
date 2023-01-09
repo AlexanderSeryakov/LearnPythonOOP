@@ -32,9 +32,14 @@ class Ship:
                 return  # Тут должна быть проверка на пересечение по у
             if self._tp == 2 and not (self._y + self._length + 1 < ship._y or ship._y + ship._length + 1 < self._y):
                 return  # Тут должна быть проверка на пересечение по у
+        # В этом блоке идёт проверка сначала по Х, входит ли Х ship в диапазон недопустимых клеток для self._x,
+        # и если это так, то сравниваются оси Y этих кораблей. В скобках проверяется, что корабли НЕ пересекаются,
+        # поэтому ставим not. Ведь, если верны все предыдущие условия, то выражение в скобках точно определяет,
+        # могут корабли пересекаться или нет.
+        # В итоге получаем булево значение True - если они пересекаются.
         if self._tp == 1:
             if ship._x in range(self._x - 1, self._x + self._length + 2):
-                return self._y + 1 < ship._y or ship._y + ship._length + 1 < self._y
+                return not (self._y + 1 < ship._y or ship._y + ship._length + 1 < self._y)
 
     def is_out_pole(self, size):
         return not 0 <= self._x + self._length < size if self._tp == 1 else not 0 <= self._y + self._length < size
@@ -93,4 +98,7 @@ class GamePole:
 
 pole = GamePole(10)
 pole.init()
-pole.draw()
+
+s1 = Ship(4, 1, 1, 5)
+s2 = Ship(3, 2, 3, 1)
+print(s1.is_collide(s2))  # True

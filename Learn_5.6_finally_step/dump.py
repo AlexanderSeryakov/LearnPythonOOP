@@ -28,18 +28,43 @@ class Ship:
             # В этом блоке идёт, если выражение в скобках даёт True, то корабли ТОЧНО не пересекаются,
             # а если False, то возможно пересечение, поэтому ставлю not,
             # чтобы при False перейти внутрь условия для доп.проверки
-            if self._tp == 1 and not (self._x + self._length + 1 < ship._x or ship._x + ship._length + 1 < self._x):
-                return  # Тут должна быть проверка на пересечение по у
-            if self._tp == 2 and not (self._y + self._length + 1 < ship._y or ship._y + ship._length + 1 < self._y):
-                return  # Тут должна быть проверка на пересечение по у
-        # В этом блоке идёт проверка сначала по Х, входит ли Х ship в диапазон недопустимых клеток для self._x,
+
+            if self._tp == 1 and not (self._x + self._length < ship._x or ship._x + ship._length < self._x):
+                # Проверяем Y-координату кораблей. Если Y + 1 одного корабля, строго меньше Y второго корабля,
+                # то они точно не пересекаются по оси Y. А в прошлом условии мы уже проверили, что и по оси X
+                # они также ТОЧНО не пересекаются. Выходит, если выполнение программы дойдет до этого блока,
+                # значит корабли ТОЧНО не пересекаются.
+
+                return not(self._y + 1 < ship._y or ship._y + 1 < self._y)
+            # В данном случае имеем 2 корабля с вертикальной ориентацией. Для начала проверим, могут ли они
+            # пересекаться или нет.
+            # Если выражение self._y + self._length + 1 < ship._y or ship._y + ship._length + 1 < self._y
+            # вернёт True, значит корабли ТОЧНО не пересекаются. А если False, то возможно пересечение.
+            # Поэтому ставим not для перехода в следующий блок для доп.проверки.
+
+            if self._tp == 2 and not (self._y + self._length < ship._y or ship._y + ship._length < self._y):
+                # Блок с доп.проверкой кораблей с вертикальной ориентацией на их пересечение. Здесь получаем
+                # окончательный результат, пересекаются корабли или нет. Если выражение в скобках выдаст True,
+                # значит корабли ТОЧНО не пересекаются. А если False, ТОЧНО пересекаются. Нам же нужно вернуть True,
+                # если есть пересечение, поэтому ставим not.
+
+                return not(self._x + 1 < ship._x or ship._x + 1 < self._x)
+
+        # Сюда мы попадаем в случае, если ориентации кораблей не равны (т.е кто-то горизонтальный, кто-то вертикальный)
+        # и уточняем, что ориентация корабля, для которого запущена проверка - горизонтальная (self._tp == 1),
+        # если это так, значит ориентация второго корабля вертикальная (ship._tp == 2).
+        # В этом блоке идёт проверка сначала по Х, входит ли ship._x в диапазон недопустимых клеток для self._x,
         # и если это так, то сравниваются оси Y этих кораблей. В скобках проверяется, что корабли НЕ пересекаются,
         # поэтому ставим not. Ведь, если верны все предыдущие условия, то выражение в скобках точно определяет,
         # могут корабли пересекаться или нет.
         # В итоге получаем булево значение True - если они пересекаются.
         if self._tp == 1:
-            if ship._x in range(self._x - 1, self._x + self._length + 2):
-                return not (self._y + 1 < ship._y or ship._y + ship._length + 1 < self._y)
+            if ship._x in range(self._x - 1, self._x + self._length + 1):
+                return not (self._y + 1 < ship._y or ship._y + ship._length< self._y)
+        if self._tp == 2:
+            if self._x in range(ship._x - 1, ship._x + ship._length + 1):
+                return not (self._y + self._length < ship._y or ship._y + 1 < self._y)
+        return False
 
     def is_out_pole(self, size):
         return not 0 <= self._x + self._length < size if self._tp == 1 else not 0 <= self._y + self._length < size
@@ -99,6 +124,24 @@ class GamePole:
 pole = GamePole(10)
 pole.init()
 
-s1 = Ship(4, 1, 1, 5)
-s2 = Ship(3, 2, 3, 1)
-print(s1.is_collide(s2))  # True
+
+s1 = Ship(3, 2, 6, 2)
+s2 = Ship(2, 1, 6, 6)
+s3 = Ship(1, 1, 8, 1)
+print(s1.is_collide(s3))  # False
+print(s1.is_collide(s2))  # False
+s1 = Ship(4, 1, 0, 0)
+s2 = Ship(3, 2, 0, 0)
+s3 = Ship(3, 2, 0, 2)
+
+assert s1.is_collide(s2), "неверно работает метод is_collide() для кораблей Ship(4, 1, 0, 0) и Ship(3, 2, 0, 0)"
+assert s1.is_collide(s3) == False, "неверно работает метод is_collide() для кораблей Ship(4, 1, 0, 0) и Ship(3, 2, 0, 2)"
+
+s2 = Ship(3, 2, 1, 1)
+assert s1.is_collide(s2), "неверно работает метод is_collide() для кораблей Ship(4, 1, 0, 0) и Ship(3, 2, 1, 1)"
+
+s2 = Ship(3, 1, 8, 1)
+assert s2.is_out_pole(10), "неверно работает метод is_out_pole() для корабля Ship(3, 1, 8, 1)"
+
+s2 = Ship(3, 2, 1, 5)
+assert s2.is_out_pole(10) == False, "неверно работает метод is_out_pole(10) для корабля Ship(3, 2, 1, 5)"

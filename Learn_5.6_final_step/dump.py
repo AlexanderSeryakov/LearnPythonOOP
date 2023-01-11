@@ -110,14 +110,16 @@ class GamePole(ConstCoords):
                                              if 0 <= y + j < self._size and 0 <= x + i < self._size)) > 0:
                 continue
             if ship._tp == 1:
-                if x + ship._length > self._size - 1:
+                if self._size < x + ship._length:
                     continue
-                self._pole[y][x: x + ship._length] = ship._cells
+                else:
+                    self._pole[y][x: x + ship._length] = ship._cells
             else:
-                if y + ship._length > self._size - 1:
+                if self._size < y + ship._length:
                     continue
-                for i in range(ship._length):
-                    self._pole[y + i][x] = ship._cells[i]
+                else:
+                    for i in range(ship._length):
+                        self._pole[y + i][x] = ship._cells[i]
             n += 1
 
     def move_ships(self):
@@ -139,14 +141,15 @@ class GamePole(ConstCoords):
         return tuple(tuple(row) for row in self._pole)
 
 
-pole = GamePole(10)
+pole = GamePole(8)
 pole.init()
+pole.show()
 
 s1 = Ship(3, 2, 6, 2)
 s2 = Ship(2, 1, 6, 6)
 s3 = Ship(1, 1, 8, 1)
-print(s1.is_collide(s3))  # False
-print(s1.is_collide(s2))  # False
+#print(s1.is_collide(s3))  # False
+#print(s1.is_collide(s2))  # False
 s1 = Ship(4, 1, 0, 0)
 s2 = Ship(3, 2, 0, 0)
 s3 = Ship(3, 2, 0, 2)
@@ -163,4 +166,4 @@ assert s2.is_out_pole(10), "неверно работает метод is_out_po
 
 s2 = Ship(3, 2, 1, 5)
 assert s2.is_out_pole(10) == False, "неверно работает метод is_out_pole(10) для корабля Ship(3, 2, 1, 5)"
-print(pole.get_pole())
+#print(pole.get_pole())

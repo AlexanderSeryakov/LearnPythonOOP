@@ -1,7 +1,16 @@
-from random import randint
+from random import randint, choice
 
 
-class Ship:
+class ConstCoords:
+    """На уровне класса объявлены 3 атрибута: _neigh, _neigh_tp_1, _neigh_tp_2
+    Минимальный набор соседних точек для кораблей на 1 палубу - _neigh,
+    для вертикальных (tp=2) - _neigh_tp_2, для горизонтальных (tp=1) - _neigh_tp_1"""
+    _neigh = (-1, -1), (0, -1), (1, -1), (-1, 0), (-1, 1), (1, 1), (0, 1), (1, 0)  # (x, y)
+    _neigh_tp_1 = (-1, -1), (0, -1), (1, -1), (-1, 0), (-1, 1), (1, 1), (0, 1)
+    _neigh_tp_2 = (-1, -1), (0, -1), (1, -1), (-1, 0), (-1, 1), (1, 1), (1, 0)
+
+
+class Ship(ConstCoords):
     def __init__(self, length, tp=1, x=None, y=None):
         self._length = length
         self._tp = tp
@@ -35,7 +44,7 @@ class Ship:
                 # они также ТОЧНО не пересекаются. Выходит, если выполнение программы дойдет до этого блока,
                 # значит корабли ТОЧНО не пересекаются.
 
-                return not(self._y + 1 < ship._y or ship._y + 1 < self._y)
+                return not (self._y + 1 < ship._y or ship._y + 1 < self._y)
             # В данном случае имеем 2 корабля с вертикальной ориентацией. Для начала проверим, могут ли они
             # пересекаться или нет.
             # Если выражение self._y + self._length + 1 < ship._y or ship._y + ship._length + 1 < self._y
@@ -48,7 +57,7 @@ class Ship:
                 # значит корабли ТОЧНО не пересекаются. А если False, ТОЧНО пересекаются. Нам же нужно вернуть True,
                 # если есть пересечение, поэтому ставим not.
 
-                return not(self._x + 1 < ship._x or ship._x + 1 < self._x)
+                return not (self._x + 1 < ship._x or ship._x + 1 < self._x)
 
         # Сюда мы попадаем в случае, если ориентации кораблей не равны (т.е кто-то горизонтальный, кто-то вертикальный)
         # и уточняем, что ориентация корабля, для которого запущена проверка - горизонтальная (self._tp == 1),
@@ -60,7 +69,7 @@ class Ship:
         # В итоге получаем булево значение True - если они пересекаются.
         if self._tp == 1:
             if ship._x in range(self._x - 1, self._x + self._length + 1):
-                return not (self._y + 1 < ship._y or ship._y + ship._length< self._y)
+                return not (self._y + 1 < ship._y or ship._y + ship._length < self._y)
         if self._tp == 2:
             if self._x in range(ship._x - 1, ship._x + ship._length + 1):
                 return not (self._y + self._length < ship._y or ship._y + 1 < self._y)
@@ -70,15 +79,9 @@ class Ship:
         return not 0 <= self._x + self._length < size if self._tp == 1 else not 0 <= self._y + self._length < size
 
 
-class GamePole:
+class GamePole(ConstCoords):
     """Класс, описывающий игровое поле. В его экземплярах происходит расстановка кораблей случ.образом,
-    перемещение и т.д
-    На уровне класса объявлены 3 атрибута: _neigh, _neigh_tp_1, _neigh_tp_2
-    Минимальный набор соседних точек для кораблей на 1 палубу - _neigh,
-    для вертикальных (tp=2) - _neigh_tp_2, для горизонтальных (tp=1) - _neigh_tp_1"""
-    _neigh = (-1, -1), (0, -1), (1, -1), (-1, 0), (-1, 1), (1, 1), (0, 1), (1, 0)  # (x, y)
-    _neigh_tp_1 = (-1, -1), (0, -1), (1, -1), (-1, 0), (-1, 1), (1, 1), (0, 1)
-    _neigh_tp_2 = (-1, -1), (0, -1), (1, -1), (-1, 0), (-1, 1), (1, 1), (1, 0)
+    перемещение и т.д"""
 
     def __init__(self, size):
         self._size = size
@@ -87,6 +90,7 @@ class GamePole:
     """Функция, в которой происходит расстановка кораблей на игровом поле. 
     А также объявляется лок.атрибут(список) - self._ships, содержащий в себе корабли, 
     которые будут присутствовать на игровом поле"""
+
     def init(self):
         self._ships = [Ship(4, tp=randint(1, 2)) for j in range(1)] + [Ship(3, tp=randint(1, 2)) for j in range(2)] + \
                       [Ship(2, tp=randint(1, 2)) for j in range(3)] + [Ship(1, tp=randint(1, 2)) for j in range(4)]
@@ -116,14 +120,27 @@ class GamePole:
                     self._pole[y + i][x] = ship._cells[i]
             n += 1
 
-    def draw(self):
+    def move_ships(self):
+        for ship in self._ships:
+            go = choice([-1, 1])
+            if ship.move(go) == 1:
+                pass
+            elif ship.move(-go) == 1:
+                pass
+
+    def show(self):
         for row in self._pole:
             print(row)
+
+    def get_ships(self):
+        return self._ships
+
+    def get_pole(self):
+        return tuple(tuple(row) for row in self._pole)
 
 
 pole = GamePole(10)
 pole.init()
-
 
 s1 = Ship(3, 2, 6, 2)
 s2 = Ship(2, 1, 6, 6)
@@ -135,7 +152,8 @@ s2 = Ship(3, 2, 0, 0)
 s3 = Ship(3, 2, 0, 2)
 
 assert s1.is_collide(s2), "неверно работает метод is_collide() для кораблей Ship(4, 1, 0, 0) и Ship(3, 2, 0, 0)"
-assert s1.is_collide(s3) == False, "неверно работает метод is_collide() для кораблей Ship(4, 1, 0, 0) и Ship(3, 2, 0, 2)"
+assert s1.is_collide(
+    s3) == False, "неверно работает метод is_collide() для кораблей Ship(4, 1, 0, 0) и Ship(3, 2, 0, 2)"
 
 s2 = Ship(3, 2, 1, 1)
 assert s1.is_collide(s2), "неверно работает метод is_collide() для кораблей Ship(4, 1, 0, 0) и Ship(3, 2, 1, 1)"
@@ -145,3 +163,4 @@ assert s2.is_out_pole(10), "неверно работает метод is_out_po
 
 s2 = Ship(3, 2, 1, 5)
 assert s2.is_out_pole(10) == False, "неверно работает метод is_out_pole(10) для корабля Ship(3, 2, 1, 5)"
+print(pole.get_pole())
